@@ -58,3 +58,23 @@ export const toggleBookmark = async (id) => {
         throw error;
     }
 }
+export const getBookmarks = async () => {
+    try {
+        const response = await fetch(`${baseUrl}/api/stories/bookmarks/me`, { 
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                authorization: `Bearer ${getAuthToken()}`
+            }
+        });
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.message || response.statusText || "Failed to fetch bookmarks");
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error fetching bookmarks:", error);
+        throw error;
+    }
+}

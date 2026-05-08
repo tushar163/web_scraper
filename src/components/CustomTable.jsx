@@ -21,7 +21,7 @@ function CustomTable({ columns = [], onEdit, onDelete }) {
     const rangeStart = (page - 1) * limit + 1;
     const rangeEnd = Math.min(page * limit, total);
 
-    return (
+    return (console.log(rows,"rows in table"),
         <Table>
             <Table.ScrollContainer>
                 <Table.Content
