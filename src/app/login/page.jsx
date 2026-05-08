@@ -101,7 +101,7 @@ function Page() { // ✅ PascalCase component name
                         Log In
                     </Button>
                     <Button
-                        variant="ghost"
+                        // variant="ghost"
                         color="primary"
                         onPress={() => router.push("/register")}
                     >
