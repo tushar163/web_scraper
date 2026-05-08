@@ -48,7 +48,7 @@ src/
 
 - [Node.js](https://nodejs.org/) v18+
 - npm or yarn
-- Backend server running on `http://localhost:5000`
+- Backend server running on `http://localhost:4000`
 
 ---
 
@@ -65,7 +65,7 @@ npm install
 Create a `.env.local` file in the root of the project:
 
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:5000
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
 ```
 
 ### 3. Run the development server
@@ -89,7 +89,7 @@ npm start
 
 | Variable                   | Description              | Example                     |
 |----------------------------|--------------------------|-----------------------------|
-| `NEXT_PUBLIC_API_BASE_URL` | Backend API base URL     | `http://localhost:5000`     |
+| `NEXT_PUBLIC_API_BASE_URL` | Backend API base URL     | `http://localhost:4000`     |
 
 ---
 
@@ -110,7 +110,7 @@ npm start
 1. User logs in → backend returns a **JWT token**
 2. Token is saved in **cookies** via `js-cookie`
 3. Every API request sends `Authorization: Bearer <token>` in headers
-4. **Next.js middleware** (`middleware.js`) guards all protected routes
+4. **Next.js proxy** (`proxy.js`) guards all protected routes
 5. Unauthenticated users are redirected to `/login?redirect=<original_path>`
 6. After login, user is sent back to the originally requested page
 7. On logout → cookie is removed → redirect to `/login`
@@ -118,7 +118,7 @@ npm start
 ```
 Visit /stories (not logged in)
         ↓
-middleware.js intercepts
+proxy.js intercepts
         ↓
 Redirect → /login?redirect=/stories
         ↓
