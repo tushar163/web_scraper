@@ -33,6 +33,7 @@ function Page() { // ✅ PascalCase component name
             if (response?.success === true) {
                 toast.success("Login successful");
                 Cookies.set("token", response.token);
+                Cookies.set("user", JSON.stringify(response.user));
                 router.push("/stories"); 
             } else {
 

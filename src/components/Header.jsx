@@ -7,10 +7,11 @@ import { useRouter } from "next/navigation";
 
 export function Header() {
     const router = useRouter();
-
+    const user = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;
     const handleLogout = () => {
-        Cookies.remove("token");           
-        router.push("/login");             
+        Cookies.remove("token");
+        Cookies.remove("user");
+        router.push("/login");
     };
 
     return (
@@ -30,7 +31,7 @@ export function Header() {
                 <Popover.Trigger>
                     <button className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-default-100 transition-colors cursor-pointer">
                         <Avatar size="sm">
-                            <Avatar.Fallback>U</Avatar.Fallback>
+                            <Avatar.Fallback>{user?.name?.charAt(0) || 'U'}</Avatar.Fallback>
                         </Avatar>
                         <span className="text-sm font-medium">My Account</span>
                         <Icon icon="gravity-ui:chevron-down" className="size-3 text-muted" />
@@ -41,7 +42,7 @@ export function Header() {
                     {/* Profile info */}
                     <div className="px-3 py-2 border-b border-divider mb-1">
                         <p className="text-xs text-muted">Signed in as</p>
-                        <p className="text-sm font-medium truncate">user@example.com</p>
+                        <p className="text-sm font-medium truncate">{user?.email || 'user@example.com'}</p>
                     </div>
 
                     {/* Menu items */}
