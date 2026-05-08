@@ -1,45 +1,35 @@
 "use client";
 
-import { Checkbox, Pagination, Table } from "@heroui/react";
-import { useMemo, useState } from "react";
-import { CustomCell } from "./CustomCell"; 
+import { Pagination, Spinner, Table } from "@heroui/react";
+import { useTableContext } from "@/context/TableContext";
+import { CustomCell } from "./CustomCell";
 
-const ROWS_PER_PAGE = 5;
+function CustomTable({ columns = [], onEdit, onDelete }) {
+    // ✅ Everything comes from context — no local state needed
+    const {
+        rows,
+        page,
+        totalPages,
+        total,
+        limit,
+        isLoading,
+        loadingId,
+        setPage,
+        handleBookmarkToggle,
+    } = useTableContext();
 
-function CustomTable({
-    rows = [],
-    columns = [],
-    onEdit,
-    onDelete,
-    onStatusChange,
-    onBookmarkToggle,
-    loadingId,
-}) {
-    const [page, setPage] = useState(1);
-    const [selectedKeys, setSelectedKeys] = useState(new Set());
-
-    const totalPages = Math.max(1, Math.ceil(rows.length / ROWS_PER_PAGE));
-
-    const paginatedItems = useMemo(() => {
-        const start = (page - 1) * ROWS_PER_PAGE;
-        return rows.slice(start, start + ROWS_PER_PAGE);
-    }, [page, rows]);
-
-    const rangeStart = (page - 1) * ROWS_PER_PAGE + 1;
-    const rangeEnd = Math.min(page * ROWS_PER_PAGE, rows.length);
+    const rangeStart = (page - 1) * limit + 1;
+    const rangeEnd = Math.min(page * limit, total);
 
     return (
         <Table>
             <Table.ScrollContainer>
                 <Table.Content
-                    aria-label="Custom table"
+                    aria-label="Stories table"
                     className="min-w-[600px]"
-                    selectedKeys={selectedKeys}
-                    selectionMode="multiple"
-                    onSelectionChange={setSelectedKeys}
                 >
+                    {/* ── Header ─────────────────────────────────── */}
                     <Table.Header>
-
                         {columns.map((col) => (
                             <Table.Column key={col.id} isRowHeader={col.id === "title"}>
                                 {col.label}
@@ -47,38 +37,52 @@ function CustomTable({
                         ))}
                     </Table.Header>
 
+                    {/* ── Body ───────────────────────────────────── */}
                     <Table.Body>
-                        {paginatedItems.map((row) => (
-                            <Table.Row key={row.id} id={row.id}>
-                                
-                                {columns.map((col) => (
-                                    <Table.Cell key={col.id}>
-                                        <CustomCell
-                                            data={row}
-                                            columnKey={col.id}
-                                            onEdit={onEdit}
-                                            onDelete={onDelete}
-                                            onStatusChange={onStatusChange}
-                                            onBookmarkToggle={onBookmarkToggle}
-                                            loadingId={loadingId}
-                                        />
-                                    </Table.Cell>
-                                ))}
+                        {isLoading ? (
+                            <Table.LoadMore isLoading={isLoading} scrollOffset={0} >
+                                <Table.LoadMoreContent>
+                                    <Spinner size="md" />
+                                </Table.LoadMoreContent>
+                            </Table.LoadMore>
+                        ) : rows.length === 0 ? (
+                            <Table.Row>
+                                <Table.Cell colSpan={columns.length} className="text-center py-10 text-muted">
+                                    No records found.
+                                </Table.Cell>
                             </Table.Row>
-                        ))}
+                        ) : (
+                            rows.map((row) => (
+                                <Table.Row key={row.id} id={row.id}>
+                                    {columns.map((col) => (
+                                        <Table.Cell key={col.id}>
+                                            <CustomCell
+                                                data={row}
+                                                columnKey={col.id}
+                                                onEdit={onEdit}
+                                                onDelete={onDelete}
+                                                onBookmarkToggle={handleBookmarkToggle} // ✅ from context
+                                                loadingId={loadingId}
+                                            />
+                                        </Table.Cell>
+                                    ))}
+                                </Table.Row>
+                            ))
+                        )}
                     </Table.Body>
                 </Table.Content>
             </Table.ScrollContainer>
 
+            {/* ── Pagination — driven by API total ───────────────── */}
             <Table.Footer>
                 <Pagination size="sm">
                     <Pagination.Summary>
-                        {rangeStart}–{rangeEnd} of {rows.length} results
+                        {total === 0 ? "No results" : `${rangeStart}–${rangeEnd} of ${total} results`}
                     </Pagination.Summary>
                     <Pagination.Content>
                         <Pagination.Item>
                             <Pagination.Previous
-                                isDisabled={page === 1}
+                                isDisabled={page === 1 || isLoading}
                                 onPress={() => setPage((p) => Math.max(1, p - 1))}
                             >
                                 <Pagination.PreviousIcon />
@@ -88,7 +92,10 @@ function CustomTable({
 
                         {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
                             <Pagination.Item key={p}>
-                                <Pagination.Link isActive={p === page} onPress={() => setPage(p)}>
+                                <Pagination.Link
+                                    isActive={p === page}
+                                    onPress={() => setPage(p)}
+                                >
                                     {p}
                                 </Pagination.Link>
                             </Pagination.Item>
@@ -96,7 +103,7 @@ function CustomTable({
 
                         <Pagination.Item>
                             <Pagination.Next
-                                isDisabled={page === totalPages}
+                                isDisabled={page === totalPages || isLoading}
                                 onPress={() => setPage((p) => Math.min(totalPages, p + 1))}
                             >
                                 Next

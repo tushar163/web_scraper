@@ -1,34 +1,22 @@
 "use client";
-import CustomTable from '@/components/CustomTable'
-import { TableHeader } from '@/data/TableHeader';
-import { fetchStories } from '@/services/apiService';
-import { toast } from '@heroui/react';
-import React, { useEffect, useState } from 'react'
 
-function page() {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetchStories();
-        if (response.success) {
-          toast.success("Stories fetched successfully");
-          setData(response.data);
-        }
-      } catch (error) {
-        console.error("Error fetching stories:", error);
-        toast.danger("Failed to fetch stories: " + (error.message || "Unknown error"));
-      }
-    };
-    fetchData();
-  }, []);
-  console.log("Fetched stories:", data);
+import CustomTable from "@/components/CustomTable";
+import { TableProvider } from "@/context/TableContext";
+import { TableHeader } from "@/data/TableHeader";
+import { fetchStories, toggleBookmark, deleteStory } from "@/services/apiService";
+
+export default function Page() {
   return (
-    <div>
-
-      <CustomTable columns={TableHeader} rows={data} />
-    </div>
-  )
+    // ✅ just swap fetchFn/bookmarkFn/deleteFn for any other module
+    <TableProvider
+      fetchFn={fetchStories}
+      bookmarkFn={toggleBookmark}
+      // deleteFn={deleteStory}
+    >
+      <div className="p-6">
+        <h1 className="text-2xl font-semibold mb-4">Stories</h1>
+        <CustomTable columns={TableHeader} />
+      </div>
+    </TableProvider>
+  );
 }
-
-export default page

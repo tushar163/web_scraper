@@ -10,7 +10,7 @@ export function CustomCell({
     onBookmarkToggle,
 }) {
     const cellValue = data[columnKey];
-
+    console.log(data,"data in cell");
     switch (columnKey) {
         case "isBookmarked":
             return (
