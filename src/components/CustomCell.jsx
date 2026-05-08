@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Button, Tooltip } from "@heroui/react";
+import { Button, Tooltip } from "@heroui/react";
 import { Icon } from "@iconify/react";
 export function CustomCell({
     data,
@@ -9,11 +9,10 @@ export function CustomCell({
     onDelete,
     onBookmarkToggle,
 }) {
-    console.log("Rendering CustomCell for column:", columnKey, "with data:", data);
     const cellValue = data[columnKey];
 
     switch (columnKey) {
-        case "isBookmark":
+        case "isBookmarked":
             return (
                 <Tooltip content={cellValue ? "Remove bookmark" : "Bookmark"}>
                     <Button

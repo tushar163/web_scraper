@@ -4,7 +4,7 @@ import { Checkbox, Pagination, Table } from "@heroui/react";
 import { useMemo, useState } from "react";
 import { CustomCell } from "./CustomCell"; 
 
-const ROWS_PER_PAGE = 10;
+const ROWS_PER_PAGE = 5;
 
 function CustomTable({
     rows = [],
@@ -41,8 +41,8 @@ function CustomTable({
                     <Table.Header>
 
                         {columns.map((col) => (
-                            <Table.Column key={col.id} isRowHeader={col.id === "name"}>
-                                {col.name}
+                            <Table.Column key={col.id} isRowHeader={col.id === "title"}>
+                                {col.label}
                             </Table.Column>
                         ))}
                     </Table.Header>
