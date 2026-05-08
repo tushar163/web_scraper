@@ -38,7 +38,7 @@ export function Header() {
                     </button>
                 </Popover.Trigger>
 
-                <Popover.Content className="w-48 p-1">
+                <Popover.Content className="w-48 p-1 ">
                     {/* Profile info */}
                     <div className="px-3 py-2 border-b border-divider mb-1">
                         <p className="text-xs text-muted">Signed in as</p>
@@ -46,20 +46,20 @@ export function Header() {
                     </div>
 
                     {/* Menu items */}
-                    <button className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-default-100 transition-colors">
+                    <button className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-default-100 transition-colors">
                         <Icon icon="gravity-ui:person" className="size-4 text-muted" />
                         Profile
                     </button>
-                    <button className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-default-100 transition-colors">
+                    <button className="flex items-center cursor-pointer gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-default-100 transition-colors">
                         <Icon icon="gravity-ui:gear" className="size-4 text-muted" />
                         Settings
                     </button>
 
                     {/* Divider + Logout */}
-                    <div className="border-t border-divider mt-1 pt-1">
+                    <div className="border-t border-divider mt-1 pt-1 cursor-pointer">
                         <button
                             onClick={handleLogout}
-                            className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md text-danger hover:bg-danger-50 transition-colors"
+                            className="flex items-center gap-2 w-full cursor-pointer px-3 py-2 text-sm rounded-md text-danger hover:bg-danger-50 transition-colors"
                         >
                             <Icon icon="gravity-ui:arrow-right-from-square" className="size-4" />
                             Logout
